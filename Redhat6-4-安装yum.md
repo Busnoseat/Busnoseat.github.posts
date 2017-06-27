@@ -4,7 +4,7 @@ date: 2016-12-01 10:17:29
 tags: linux_环境
 ---
 
-<h4>step1: 下载安装包</h4?
+<h4>step1: 下载安装包</h4>
   $ uanme -r   （查看linux版本） 分i386和x86_64 <br>
      x86 地址：http://mirrors.163.com/centos/6/os/i386/Packages/  
      x86_64 地址：http://mirrors.163.com/centos/6/os/x86_64/Packages/  
