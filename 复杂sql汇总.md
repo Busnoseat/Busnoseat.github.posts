@@ -4,16 +4,10 @@ date: 2018-03-26 16:18:56
 tags: sql
 ---
 
-
-记录平时用到的复杂sql:
-[for xml path](#1)
-[stuff](#2)
-[for xml path+stuff](#3)
-<!--more-->
-
-<span id = "1"><h3>for xml path [('code')]</h3></span>
+# for xml path [('code')]
 将多条数据并成一条xml格式数据，并且每个字段都会成为一个元素标签。
 如果code不为空并则每条数据最外层再套上一层code标签。
+<!--more-->
 数据库表结构如下:
 
 |序号| hobbyID |hName| 
@@ -57,7 +51,7 @@ SELECT '[ '+hName+' ]' FROM @hobby FOR XML PATH('')
 [爬山][游泳][美食]
 ```
 
-<span id = "2"><h3>stuff(sql,startIndex,length,param)</h3></span>
+# stuff(sql,startIndex,length,param)
 
 将sql从startIndex开始删除length长度，然后用param替代删掉的字符。注意startIndex从1开始(数据库一般是从1开始的)
 ```
@@ -67,7 +61,7 @@ select stuff(',[爬山],[游泳],[美食]',1,1,'')
 
 ```
 
-<span id = "3"><h3>给指定用户新增所有权限</h3></span>
+# 给指定用户新增所有权限 
 ```
 DECLARE  @columns VARCHAR(MAX), @query NVARCHAR(MAX)
 SELECT @columns = stuff ((
