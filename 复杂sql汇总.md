@@ -72,3 +72,62 @@ update org_user_permission_plus　
 set permissioncontents=@columns  where employeeuuid='123'
 ```
 
+
+# 查询慢sql，并且杀死慢sql
+
+```
+SELECT 'kill ' + CONVERT(nvarchar(10), session_Id), [Spid] = session_Id, ecid, [Database] = DB_NAME(sp.dbid), [User] = nt_username, [Status] = er.status, [Wait] = wait_type, [Individual Query] = SUBSTRING(qt.text, er.statement_start_offset / 2, (CASE WHEN er.statement_end_offset = - 1 THEN LEN(CONVERT(NVARCHAR(MAX), qt.text)) * 2 ELSE er.statement_end_offset END - er.statement_start_offset) / 2), [Parent Query] = qt.text, Program = program_name, Hostname, nt_domain, start_time FROM sys.dm_exec_requests er INNER JOIN sys.sysprocesses sp ON er.session_id = sp.spid CROSS APPLY sys.dm_exec_sql_text(er.sql_handle) AS qt WHERE session_Id > 50 /* Ignore system spids.a*/ AND session_Id NOT IN (@@SPID)
+ORDER BY er.start_time
+```
+
+
+# 索引相关
+
+```
+--查询索引
+select  a.name as tabname
+       ,h.name as idname
+from  sys.objects    as  a 
+right join sys.indexes  as h  on  a.object_id=h.object_id
+ where  a.type<>'s'  and a.name ='org_businessremind'
+
+--创建索引
+IF NOT EXISTS(SELECT top 1 1 from sysindexes WHERE id=object_id('org_businessremind') AND name='idx_org_businessremind_employeeId_read_deleted_businessType')
+  BEGIN
+		CREATE NONCLUSTERED INDEX idx_org_businessremind_employeeId_read_deleted_businessType ON dbo.org_businessremind(employeeId,[read],deleted) INCLUDE(businessType)
+  END
+GO
+
+--删除索引
+IF EXISTS (SELECT top 1 1 from sysindexes WHERE id=object_id('com_estate') AND name='index_com_estate_estateUuid')
+BEGIN
+  DROP INDEX index_com_estate_estateUuid ON dbo.com_estate
+END
+GO
+
+```
+
+# 所有公司跑一个sql
+
+```
+--创建临时表
+SELECT distinct name INTO #temp  FROM  sys.databases  WHERE  state=0 AND DATABASE_id> 4
+
+--临时表里循环跑sql
+  DECLARE @dbname NVARCHAR(100)=''
+  DECLARE @sql NVARCHAR(MAX)='这是一个sql'
+  DECLARE @finalsql NVARCHAR(MAX)
+  DECLARE @i INT
+  SET @i=0
+   WHILE EXISTS(SELECT * FROM  #temp)
+     BEGIN
+    SELECT TOP 1 @dbname=name FROM  #temp
+    SET  @finalsql=N' use '+@dbname +@sql
+    PRINT @finalsql
+  exec sp_executesql @finalsql
+  select 1
+  DELETE FROM #temp WHERE  name=@dbname
+  SET @i=@i+1
+  PRINT @i 
+ END
+```
