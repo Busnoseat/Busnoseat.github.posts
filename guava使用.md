@@ -78,7 +78,7 @@ public class CompanyService {
     private GuavaCacheManager cacheManager;
 
     /**
-     * 最基础的是根据cacheManage获取cache，再用cache根据key获取缓存值
+     * 最基础的是根据cacheManage获取cache，再用cache根据key获取缓存值。推荐使用这种灵活方便的使用方式
      */
     public Object getByCacheManager() {
         String cacheName = "cacheName";
@@ -89,6 +89,7 @@ public class CompanyService {
     }
 
     /**
+     * 使用注解的话 需要在启动类上
      * @Cacheable 用于某个方法，希望这个方法添加缓存，此方法被调用的时候，如果有缓存，此方法不执行。
      * value：缓存名称
      * key：cache根据key获取缓存的值，支持spring的el表达式。
