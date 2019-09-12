@@ -4,7 +4,89 @@ date: 2018-03-26 16:18:56
 tags: sql
 ---
 
-# for xml path [('code')]
+# 行转列(case when 或者 pivot)
+接到一个需求，查询每张表的汇总数据，并且汇成一行显示
+## case when的方式，先对数据分组，出参里根据某个字段进行判断
+```
+with 
+userCountQry
+as(
+select cast(count(1) as VARCHAR) as num ,'userCount' as type,'companyUuid1' as name  from org_employee where deleted=0 and status in ('正式','试用','实习')  
+)
+,deptCountQry AS
+(
+select cast(count(1) as VARCHAR)  as num ,'shopCount' as type,'companyUuid1' as name  from org_department where deleted=0 and businesstype = '4' and closetime is null 
+)
+,firstTimeQry as(
+select  CONVERT(varchar(100), min(createdtime), 112) as num,'firstUserTime' as type,'companyUuid1' as name  from org_employee  where employeeuuid <> '9999'
+)
+,estateQey AS(
+select  cast(count(1) as VARCHAR) as num ,'estateCount' as type ,'companyUuid1' as name  from loupan_estate estate where estate.deleted=0 and ISNULL(estate.standardEstateUuid, '')<>''
+)
+select 
+max(case when type = 'userCount' then num else 0 end) '使用经纪人量'
+,max(case when type = 'shopCount' then num else 0 end) '使用门店量'
+,max(case when type = 'firstUserTime' then num else 0 end) '开始使用时间'
+,max(case when type = 'estateCount' then num else 0 end) '关联小区数量'
+from (
+select * from userCountQry
+union all
+select * from deptCountQry
+union all
+select * from firstTimeQry
+union all 
+select * from estateQey
+)a group by a.name
+```
+附上查询结果：
+![Image text](/asset/article/20190909/1.png)
+
+## pivot的方式，这是sqlserver提供的一种函数，大致语法为：
+
+```
+/**
+ *  大致语法为
+ *  select * from sourceTable
+ *  PIVOT(
+ *  聚合函数（value_column）
+ *  FOR pivot_column
+ *  IN(<column_list>)
+ *
+ */
+
+with 
+userCountQry
+as(
+select cast(count(1) as VARCHAR) as num ,'经纪人使用量' as type  from org_employee where deleted=0 and status in ('正式','试用','实习')  
+)
+,deptCountQry AS
+(
+select cast(count(1) as VARCHAR)  as num ,'门店使用量' as type from org_department where deleted=0 and businesstype = '4' and closetime is null 
+)
+,firstTimeQry as(
+select  CONVERT(varchar(100), min(createdtime), 112) as num,'首次使用时间' as type  from org_employee 
+)
+,estateQey AS(
+select  cast(count(1) as VARCHAR) as num ,'小区关联使用量' as type from loupan_estate estate where estate.deleted=0 and ISNULL(estate.standardEstateUuid, '')<>''
+)
+
+select * from
+(
+select * from userCountQry
+union all
+select * from deptCountQry
+union all
+select * from firstTimeQry
+union all 
+select * from estateQey
+)tb pivot(max(num) for type in(经纪人使用量,门店使用量,首次使用时间,小区关联使用量)
+) pvt
+```
+附上查询结果：
+![Image text](/asset/article/20190909/2.png)
+
+
+# 列转行 (for xml path [('code')])
 将多条数据并成一条xml格式数据，并且每个字段都会成为一个元素标签。
 如果code不为空并则每条数据最外层再套上一层code标签。
 <!--more-->
@@ -51,7 +133,7 @@ SELECT '[ '+hName+' ]' FROM @hobby FOR XML PATH('')
 [爬山][游泳][美食]
 ```
 
-# stuff(sql,startIndex,length,param)
+# 替换函数（stuff(sql,startIndex,length,param)）
 
 将sql从startIndex开始删除length长度，然后用param替代删掉的字符。注意startIndex从1开始(数据库一般是从1开始的)
 ```
@@ -61,7 +143,8 @@ select stuff(',[爬山],[游泳],[美食]',1,1,'')
 
 ```
 
-# 给指定用户新增所有权限 
+
+# 给指定用户新增所有权限 （列转行，再加上替换函数stuff即可）
 ```
 DECLARE  @columns VARCHAR(MAX), @query NVARCHAR(MAX)
 SELECT @columns = stuff ((
