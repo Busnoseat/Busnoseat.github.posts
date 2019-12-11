@@ -4,6 +4,10 @@ date: 2018-03-26 16:18:56
 tags: sql
 ---
 
+记录自己平时遇到的复杂sql
+<!--more-->
+![Image text](/asset/article/beautifulImage/1.jpg)
+
 # 行转列(case when 或者 pivot)
 接到一个需求，查询每张表的汇总数据，并且汇成一行显示
 ## case when的方式，先对数据分组，出参里根据某个字段进行判断
@@ -213,4 +217,39 @@ SELECT distinct name INTO #temp  FROM  sys.databases  WHERE  state=0 AND DATABAS
   SET @i=@i+1
   PRINT @i 
  END
+```
+
+# 游标
+如果需要循环处理sql，并且数据量不是很大的时候，可以使用游标。
+
+```
+
+declare   @id int           
+declare   @name varchar(50)   
+
+--创建一个游标
+declare my_cursor cursor for     
+select id,name from my_user 
+
+--打开游标
+open my_cursor   
+  
+--获取下一条数据并赋值给变量
+fetch next from my_cursor into @id,@name  
+
+--while循环判断
+while @@FETCH_STATUS=0 
+begin
+print(@name) --print()
+select * from my_user where id=@id 
+--这里一定要在while循环里手动转至下一条数据
+fetch next from my_cursor into @id,@name 
+end
+
+--关闭游标
+close my_cursor
+--删除游标
+deallocate my_cursor
+
+
 ```
