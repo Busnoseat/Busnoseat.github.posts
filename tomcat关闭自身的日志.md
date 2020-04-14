@@ -1,7 +1,7 @@
 ---
 title: tomcat关闭自身的日志
 date: 2016-12-02 16:33:34
-tags: tomcat
+tags: 优化
 ---
 
 问题： 项目日志一般用slf4j,logback等自定义日志文件，或者存到mongdb里。这样就没必要使用tomcat的打印的日志，尤其是catalina.out，虽然每天备份但是不清空自身会导致内存吃紧。
