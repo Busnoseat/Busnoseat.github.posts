@@ -6,10 +6,9 @@ tags: sql
 
 记录自己平时遇到的复杂sql
 <!--more-->
-![Image text](/asset/article/beautifulImage/1.jpg)
-
 # 行转列(case when 或者 pivot)
 接到一个需求，查询每张表的汇总数据，并且汇成一行显示
+
 ## case when的方式，先对数据分组，出参里根据某个字段进行判断
 ```
 with 
@@ -89,6 +88,7 @@ select * from estateQey
 附上查询结果：
 ![Image text](/asset/article/20190909/2.png)
 
+---
 
 # 列转行 (for xml path [('code')])
 将多条数据并成一条xml格式数据，并且每个字段都会成为一个元素标签。
@@ -136,6 +136,7 @@ SELECT '[ '+hName+' ]' FROM @hobby FOR XML PATH('')
 运行结果如下所示:
 [爬山][游泳][美食]
 ```
+---
 
 # 替换函数（stuff(sql,startIndex,length,param)）
 
@@ -146,7 +147,7 @@ select stuff(',[爬山],[游泳],[美食]',1,1,'')
 [爬山],[游泳],[美食]
 
 ```
-
+---
 
 # 给指定用户新增所有权限 （列转行，再加上替换函数stuff即可）
 ```
@@ -158,7 +159,7 @@ select ','+cast(permissionId as varchar)+':允许' from org_permission for xml p
 update org_user_permission_plus　
 set permissioncontents=@columns  where employeeuuid='123'
 ```
-
+---
 
 # 查询慢sql，并且杀死慢sql
 
@@ -166,7 +167,7 @@ set permissioncontents=@columns  where employeeuuid='123'
 SELECT 'kill ' + CONVERT(nvarchar(10), session_Id), [Spid] = session_Id, ecid, [Database] = DB_NAME(sp.dbid), [User] = nt_username, [Status] = er.status, [Wait] = wait_type, [Individual Query] = SUBSTRING(qt.text, er.statement_start_offset / 2, (CASE WHEN er.statement_end_offset = - 1 THEN LEN(CONVERT(NVARCHAR(MAX), qt.text)) * 2 ELSE er.statement_end_offset END - er.statement_start_offset) / 2), [Parent Query] = qt.text, Program = program_name, Hostname, nt_domain, start_time FROM sys.dm_exec_requests er INNER JOIN sys.sysprocesses sp ON er.session_id = sp.spid CROSS APPLY sys.dm_exec_sql_text(er.sql_handle) AS qt WHERE session_Id > 50 /* Ignore system spids.a*/ AND session_Id NOT IN (@@SPID)
 ORDER BY er.start_time
 ```
-
+---
 
 # 索引相关
 
@@ -193,6 +194,7 @@ END
 GO
 
 ```
+---
 
 # 所有公司跑一个sql
 
@@ -218,6 +220,7 @@ SELECT distinct name INTO #temp  FROM  sys.databases  WHERE  state=0 AND DATABAS
   PRINT @i 
  END
 ```
+---
 
 # 游标
 如果需要循环处理sql，并且数据量不是很大的时候，可以使用游标。
