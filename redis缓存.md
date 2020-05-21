@@ -4,4 +4,82 @@ date: 2019-09-25 16:03:56
 tags: 缓存
 ---
 
+ Redis 是完全开源免费的，遵守BSD协议，是一个高性能的key-value数据库。
  <!--more--> 
+
+ # redis特点
+ * 性能极高 – Redis能读的速度是110000次/s,写的速度是81000次/s 
+ * 支持数据的持久化，可以将内存中的数据保存在磁盘中，重启的时候可以再次加载进行使用。
+ * 丰富的数据类型 ，支持二进制案例的 Strings, Lists, Hashes, Sets 及 Ordered Sets 数据类型操作
+ * 支持数据的备份，即master-slave模式的数据备份
+ ---
+
+ # 五大数据类型
+ * string（字符串）
+ 1 string是redis最基本的类型，一个key对应一个value
+ 2 string类型是二进制安全的。意思是redis的string可以包含任何数据
+ 3 一个redis中字符串value最多可以是512M
+ * list（列表）
+ 简单的字符串列表，按照插入顺序排序。你可以添加一个元素导列表的头部（左边）或者尾部（右边）。它的底层实际是个链表
+ * set（集合）
+ string类型的无序集合。它是通过HashTable实现的
+ * hash（哈希）
+  string 类型的 field 和 value 的映射表，hash 特别适合用于存储对象，类似Java里面的Map<String,Object>。
+ * zset(sorted set：有序集合)
+ 1 zset 和 set 一样也是string类型元素的集合,且不允许重复的成员
+ 2 不同的是每个元素都会关联一个double类型的分数
+ 3 redis正是通过分数来为集合中的成员进行从小到大的排序。zset的成员是唯一的,但分数(score)却可以重复
+ ---
+
+ # 主从复制
+ * 操作主库，数据也会同步到从库里。
+ * 无法做master选举，主库宕机后需要手动将从库更改为主库。
+ * slave节点配置文件里修改：  slaveof 主服务器的IP  端口号 。即可开启主从复制
+ * 主从复制过程：  
+ 1 slave 连接到 master 后, 会向 master 发送 SYNC 命令.
+ 2 master接收到SYNC命令后，开启一个后台子进程执行BGSAVE,BGSAVE结束后生成.rdb文件，将rbd文件发给从库
+ 3 master开始执行BGSAVE时，会将该时间点后的新操作命令保存到缓存区，最终以redis命令协议的格式，将缓存区内容发给从库
+ * 复制方式
+ 1 基于rdb文件复制
+ 2 无硬盘复制 配置rpli-diskless-sync yes
+ 3 增量复制 PSYNC master run id. offset
+ ---
+
+ # 哨兵模式
+ * 配置文件为sentinel.conf
+ * 配置节点: sentinel monitor mymaster 192,168,11,111 6379 2 最后的2为投票数
+ * 客户端要访问的服务 IP 不是主节点，而是 sentiner 服务器的 IP
+ * 监控：Sentinel 会不断地检查你的主服务器和从服务器是否运作正常
+ * 自动故障迁移：主库不正常工作时，将主库其中的一个从库升级为主库，并将失效主库的其他从库改为复制新的主库。当客户端连接失效主库时，集群会返回客户端新主库地址
+ * Sentinel 是一个分布式系统，可运行多个 Sentinel 进程来监控主库，并使用投票协议决定新主库
+ * 是高可用方案, 但不是高性能方案（虽然主节点可以重新选举，但是主节点只有一个，大数据扛不住）
+ ---
+
+ # 集群
+ * Redis 集群是一个提供在多个Redis间节点间共享数据的程序集
+ * 不支持多个key的命令，因为不同节点间移动数据消耗性能
+ * 自动分割数据到不同的节点。Reids有slot槽的概念: redis中有16384个. 根据key的 CRC16 算法, 取得的结果与槽数取模.落入的槽的索引是固定的. 然后根据节点数将槽的范围确定到每个节点上
+ * 整个集群的部分节点失败或者不可达的情况下能够继续处理命令
+ ---
+
+ # 持久化
+ 
+ ---
+
+ # redis事务
+ ---
+
+ # 发布订阅
+ ---
+
+ # 
+
+ 【参考文献】：
+ https://blog.csdn.net/qq_40804005/article/details/82919154
+ https://www.runoob.com/redis/redis-intro.html
+ https://www.cnblogs.com/hjwublog/p/5660578.html
+ https://www.cnblogs.com/jimisun/p/10045772.html
+ https://blog.csdn.net/Stream_who/article/details/86354391
+ https://www.cnblogs.com/demingblog/p/10295236.html
+ https://www.cnblogs.com/cheyunhua/p/10771694.html
+ https://www.cnblogs.com/walkinhalo/p/10719688.html
