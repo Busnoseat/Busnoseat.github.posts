@@ -1,9 +1,11 @@
 layout: 
-title: es使用环建议
+title: es使用建议
 date: 2020-05-25 11:40:17
 tags: 环境
 ---
 
+es在使用过程中的的建议
+<!--more-->
 # linux配置
 https://www.elastic.co/guide/en/elasticsearch/reference/current/system-config.html
 ## 修改文件句柄数 
