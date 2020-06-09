@@ -18,6 +18,12 @@ LocalDate localDate = LocalDate.now();
 ```
 LocalDate localDate = LocalDate.of(2020, 6, 8);
 ```
+* 指定日期创建时间
+```
+String dayStr = "20200609";
+LocalDate localDate = LocalDate.parse(dayStr, DateTimeFormatter.BASIC_ISO_DATE);
+ ```
+
 * 获取年月日周
 ```
 localDate.getYear();
@@ -94,9 +100,21 @@ localDateTime = localDateTime.minusMinutes(1);
 localDateTime = localDateTime.minusSeconds(1);
 System.out.println(localDateTime);
 ```
+*	时间前后比较
+```
+isAfter();
+isBefore();
+```
 
 ## ZonedDateTime
 最完整的日期时间，包含时区和相对UTC或格林威治的时差
+```
+//当前时间添加上时区
+ZoneId china = ZoneId.of("America/New_York");
+LocalDateTime localDateTime = LocalDateTime.now();
+ZonedDateTime dateAndTimeInNewYork = ZonedDateTime.of(localDateTime, china);
+System.out.println(dateAndTimeInNewYork);
+ ```
 
 
 ## Period
