@@ -76,10 +76,10 @@ private void configurationElement(XNode context) {
 ```
 
 ### cacheRefElement解析`cache-ref`节点
-示例
 ```
 <cache-ref namespace="com.someone.application.data.SomeMapper"/>
 ```
+对某一命名空间的语句，只会使用该命名空间的缓存进行缓存或刷新。 但你可能会想要在多个命名空间中共享相同的缓存配置和实例。要实现这种需求，你可以使用 cache-ref 元素来引用另一个缓存。
 
 ```
 // XMLMapperBuilder.java
@@ -103,7 +103,6 @@ private void cacheRefElement(XNode context) {
 *   解析失败，因为此处指向的 Cache 对象可能未初始化，则先调用 Configuration#addIncompleteCacheRef(CacheRefResolver incompleteCacheRef) 方法，添加到 configuration 的 incompleteCacheRefs
 
 ### cacheElement解析`cache`节点
-示例
 ```
 // 使用默认缓存
 <cache eviction="FIFO" flushInterval="60000"  size="512" readOnly="true"/>
@@ -113,6 +112,8 @@ private void cacheRefElement(XNode context) {
   <property name="cacheFile" value="/tmp/my-custom-cache.tmp"/>
 </cache>
 ```
+默认情况下，mybatis只启用了本地的会话缓存，它仅仅对一个会话中的数据进行缓存。 要启用全局的二级缓存，只需要在你的 SQL 映射文件中添加以上的cache标签
+
 ```
 // XMLMapperBuilder.java
 
