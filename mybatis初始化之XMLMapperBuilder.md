@@ -3,7 +3,7 @@ title: mybatis初始化之XMLMapperBuilder
 date: 2020-06-03 22:01:13
 tags: mybatis
 ---
-MyBatis 初始化的第二步，加载 Mapper 映射配置文件。而这个步骤的入口是 XMLMapperBuilder。
+在 MyBatis 初始化过程中，会加载 Mapper映射配置文件。而这个步骤的入口是 XMLMapperBuilder。
 <!--more-->
 
 # parse方法
