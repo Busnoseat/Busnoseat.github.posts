@@ -3,7 +3,7 @@ title: sqlserver执行计划
 date: 2020-08-10 17:01:58
 tags: sql
 ---
-
+优化sqlserver的慢sql的时候，少不了使用工具SSMS
 <!--more-->
 ## 怎么看执行计划
 图形化执行计划是从上到下从右到左看的。
