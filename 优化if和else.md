@@ -177,4 +177,55 @@ public class Vehicle implements ApplicationContextAware {
 贴上流程图
 ![Image text](/asset/article/20190722/1.png)
 
+# 策略模式+工厂模式
+上个例子中，策略接口里需要维护策略和实现类的对应关系，其实spring注解@Autowired也有相同功能。 ** @Autowired  ** 标注作用于Map类型时，如果Map的key为String类型，则 Spring会将容器中所有类型符合Map的value对应的类型的Bean增加进来，用Bean的id或name作为Map的key
+
+```
+public interface Handler {
+    void exec();
+}
+
+@Component
+public class CatHandler implements Handler {
+    @Override
+    public void exec() {
+        System.out.println("cat");
+    }
+}
+
+@Component
+public class DogHandler implements Handler {
+    @Override
+    public void exec() {
+        System.out.println("dog");
+    }
+}
+
+public enum HandlerEnum {
+    CAT("catHandler");
+
+    HandlerEnum(String handler) {
+        this.handler = handler;
+    }
+
+    private String handler;
+
+    public String getHandler() {
+        return handler;
+    }
+}
+
+@Component
+public class HanderFactory {
+    @Autowired
+    Map<String, Handler> handlerMap = new ConcurrentHashMap<>(2);
+
+    public Handler getHandler(HandlerEnum handlerEnum) {
+        return handlerMap.get(handlerEnum.getHandler());
+    }
+}
+
+```
+
+
 总结:核心思想为采用策略模式，将实现委托给各个子类，实现方式可以为上图、工厂模式等。
