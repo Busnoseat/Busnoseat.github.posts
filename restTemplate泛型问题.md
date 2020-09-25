@@ -42,6 +42,24 @@ String resultStr=restTemplate.postForObject(url,formEntity,String.class);
 ```
 ![image](/asset/article/20200922/3.png)
 
+当然还可以提供一个公共方法出来，因为TypeReference支持泛型动态传参
+```
+ /*
+  *公共方法 统一转换json为entity
+  */
+ public static <T> PaymentDataResponse<T> parseToMap(String str, Class<T> classType) {
+        return JSON.parseObject(str, new TypeReference<PaymentDataResponse<T>>(classType) {
+        });
+    }
+
+...
+String resultStr=restTemplate.postForObject(url,formEntity,String.class);
+result = parseToMap(resultStr,QueryOrderStatusDTO.class);
+...
+```
+不过这样不好，每次请求都需要new一个新的TypeReference。我还是喜欢统一类型的使用同一个typeReference，typeReference定义一个final类型的避免被篡改。
+
+
 ## 使用restTemplate的exchange
 如果不想在之后转换格式，而是在请求返回的时候就序列化好，那么可以使用restTemplate的exchange方法
 
