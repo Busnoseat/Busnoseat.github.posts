@@ -1,7 +1,7 @@
 ---
 title: hexo添加可爱的live2D
 date: 2020-05-27 20:20:05
-tags: hexo
+tags: 环境
 ---
 如何将可爱的2次元人物模型-live2D配置到hexo博客中来呢
 <!--more-->大概只要几小步就可以完成了哦

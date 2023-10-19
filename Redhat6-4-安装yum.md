@@ -1,7 +1,7 @@
 ---
 title: Redhat6.4 安装yum
 date: 2016-12-01 10:17:29
-tags: linux_环境
+tags: 环境
 ---
 
 <h4>step1: 下载安装包</h4>

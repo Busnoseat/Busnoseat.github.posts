@@ -1,7 +1,7 @@
 ---
-title: Linux常用命令（不定期更新）
+title: linux查询日志
 date: 2016-12-13 17:38:06
-tags: linux_环境
+tags: 线上问题
 ---
 
 # 查询日志

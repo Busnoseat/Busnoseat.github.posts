@@ -220,7 +220,25 @@ SELECT distinct name INTO #temp  FROM  sys.databases  WHERE  state=0 AND DATABAS
   PRINT @i 
  END
 ```
+
 ---
+
+# 所有公司 但是排除一部分公司 执行sql
+
+```
+-- 测试数据 指定数据库执行sql
+IF EXISTS(select TOP 1 NAME
+          From Master..SysDataBases
+          Where DbId = (Select Dbid From Master..SysProcesses Where Spid = @@spid)
+            and name not IN ('数据库名称A',"数据库名称B"))
+    BEGIN
+        select 1
+    END
+GO
+```
+
+---
+
 
 # 游标
 如果需要循环处理sql，并且数据量不是很大的时候，可以使用游标。

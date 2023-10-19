@@ -1,7 +1,7 @@
 ---
 title: linux ping通ip不通域名
 date: 2016-12-01 10:07:15
-tags: linux_环境
+tags: 环境
 ---
 
 <h4>step1:确定已经设置域名服务器</h4>

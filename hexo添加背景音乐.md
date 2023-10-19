@@ -1,7 +1,7 @@
 ---
 title: hexo添加背景音乐
 date: 2016-11-30 11:54:46
-tags: hexo
+tags: 环境
 ---
 
 hexo添加背景音乐，流程是生成iframe标签，并将标签嵌入到js里即可。
