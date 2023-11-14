@@ -1,7 +1,7 @@
 ---
-title: MySQL中分析慢sql的命令
+title: mysql分析慢sql的命令
 date: 2020-05-25 19:26:15
-tags: sql
+tags: 数据库
 ---
 随着线上的数据增多，sql性能会逐渐体现出来，这个时候就体现出sql优化的重要性。
 <!--more-->

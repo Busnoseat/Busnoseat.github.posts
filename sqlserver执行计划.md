@@ -1,7 +1,7 @@
 ---
 title: sqlserver执行计划
 date: 2020-08-10 17:01:58
-tags: sql
+tags: 数据库
 ---
 学习查看sqlserver的执行计划 可以帮助我们快速的定位到慢sql的原因。
 <!--more-->

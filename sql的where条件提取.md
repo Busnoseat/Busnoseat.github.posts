@@ -1,7 +1,7 @@
 ---
 title: sql的where条件提取
 date: 2020-06-01 19:05:02
-tags: sql
+tags: 数据库
 ---
 
 给定一条SQL，如何提取其中的where条件？where条件中的每个子条件，在SQL执行的过程中有分别起着什么样的作用？

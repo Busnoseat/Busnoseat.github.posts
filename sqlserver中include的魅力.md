@@ -1,7 +1,7 @@
 ---
 title: sqlserver中include的魅力
 date: 2020-08-12 18:35:21
-tags: sql
+tags: 数据库
 ---
 
 优化慢sql的时候，ssms经常会建议添加include的索引，那么include和复合索引究竟有啥区别呢

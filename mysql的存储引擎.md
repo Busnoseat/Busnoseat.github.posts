@@ -1,7 +1,7 @@
 ---
-title: InnoDB和MyISAM的区别
+title: mysql的存储引擎
 date: 2020-05-27 17:45:55
-tags: sql
+tags: 数据库
 ---
 
 InnoDB和MyISAM都是mysql的存储引擎，在MySQL 5.5版本前，默认的存储引擎为MyISAM。在那之后MySQL的默认存储引擎改为InnoDB。

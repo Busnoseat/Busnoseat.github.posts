@@ -1,7 +1,7 @@
 ---
 title: sql中不走索引的场景
 date: 2019-07-08 17:59:00
-tags: sql
+tags: 数据库
 ---
 
 本文完全转载。原文地址： https://www.cnblogs.com/b3051/p/8478500.html 感谢作者。 
